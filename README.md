@@ -1212,6 +1212,73 @@ MySchema = new SimpleSchema({
   },
 });
 ```
+### Translation of Messages, i18n
+to provide similar messages in another language, you could use setDefaultMessage function to SimpleSchema:
+
+Lets make an Spanish messages example.
+```js
+SimpleSchema.setDefaultMessages({
+  initialLanguage: 'es',
+  messages: {
+    es: {
+      required: '{{{label}}} es requerido',
+      minString: '{{{label}}} debe de contener por lo menos {{min}} carácteres',
+      maxString: '{{{label}}} no puede exceder a los {{max}} carácteres',
+      minNumber: '{{{label}}} debe de ser como mínimo {{min}}',
+      maxNumber: '{{{label}}} no puede exceder a {{max}}',
+      minNumberExclusive: '{{{label}}} debe de ser mayor a {{min}}',
+      maxNumberExclusive: '{{{label}}} debe de ser menor a {{max}}',
+      minDate: '{{{label}}} debe de ser posterior al {{min}}',
+      maxDate: '{{{label}}} debe de ser antes del {{max}}',
+      badDate: '{{{label}}} no es una fecha válida',
+      minCount: 'Debe de especificar por lo menos {{minCount}} valores',
+      maxCount: 'No debe de especificar más de {{maxCount}} valores',
+      noDecimal: '{{{label}}} debería ser un valor entero',
+      notAllowed: '{{{value}}} no es un valor permitido',
+      expectedType: '{{{label}}} debería ser del tipo de dato {{dataType}}',
+      regEx: function regEx(label, regExp) {
+        //console.log('config');
+        //console.log(label.label);
+        var regExpMessage='El valor no cumple con la validación del sistema (Regex)',
+            regExpMessage2='';
+
+        switch (regExp) {
+          case (SimpleSchema.RegEx.Email.toString()):
+          case (SimpleSchema.RegEx.EmailWithTLD.toString()):
+              regExpMessage = "no es un correo electrónico válido";
+          case (SimpleSchema.RegEx.Domain.toString()):
+          case (SimpleSchema.RegEx.WeakDomain.toString()):
+              regExpMessage = "no es un nombre de dominio válido";
+          case (SimpleSchema.RegEx.IP.toString()):
+              regExpMessage = "no es una dirección IP válida";
+          case (SimpleSchema.RegEx.IPv4.toString()):
+              regExpMessage = "no es una dirección IPv4 válida";
+          case (SimpleSchema.RegEx.IPv6.toString()):
+              regExpMessage = "no es una dirección IPv6 válida";
+          case (SimpleSchema.RegEx.Url.toString()):
+              regExpMessage = "no es un URL válido";
+          case (SimpleSchema.RegEx.Id.toString()):
+              regExpMessage = 'debe de ser un valor exclusivamente alfanumérico';
+          case (SimpleSchema.RegEx.ZipCode.toString()):
+              regExpMessage = 'no es un código ZIP válido';
+          case (SimpleSchema.RegEx.Phone.toString()):
+              regExpMessage = 'no es un número de teléfono válido';
+          default:
+              regExpMessage = 'no cumple con la validación del sistema (Regex)';
+        }
+        if (label.label) {
+          regExpMessage2 = label.label + ', ';
+        } else {
+          regExpMessage2 = 'El valor ';
+        }
+        regExpMessage2 = regExpMessage2 + regExpMessage;
+        return regExpMessage2;
+      },
+      keyNotInSchema: '{{name}} no está permitido en el schema'
+    }
+  }
+});
+```
 
 ### Translation of Regular Expression Messages
 
